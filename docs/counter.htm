@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>手工计数器</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    .large {
+      font-size: 48px;
+      margin: 10px 0;
+    }
+    input[type="number"] {
+      width: 100px;
+    }
+    textarea {
+      width: 100%;
+      height: 500px;
+    }
+    button {
+      margin-right: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕒</text></svg>">
+
+</head>
+<body>
+  <h2>手工计数器</h2>
+
+  <label>最大值 Max: <input id="maxValInput" type="number" value="100"></label>
+  <button onclick="setMax()">Set</button>
+  <br><br>
+
+  <div id="counter" class="large">0 / 100</div>
+
+  <button onclick="logStart()">Start</button>
+  <button onclick="increment()">+</button>
+  <button onclick="resetCounter()">Reset</button>
+
+  <br><br>
+
+  <textarea id="history" readonly></textarea>
+
+  <script>
+    let count = 0;
+    let maxVal = 20;
+
+    function setMax() {
+      maxVal = parseInt(document.getElementById("maxValInput").value) || 0;
+      updateCounter();
+    }
+
+    function increment() {
+      if (count >= maxVal) {
+        alert("已达到最大值");
+        return;
+      }
+      count++;
+      updateCounter();
+      appendHistory(count);
+    }
+
+    function resetCounter() {
+      count = 0;
+      updateCounter();
+      document.getElementById("history").value = "";
+    }
+
+    function updateCounter() {
+      document.getElementById("counter").textContent = `${count} / ${maxVal}`;
+    }
+
+    function appendHistory(value) {
+      const timestamp = getTimestamp();
+      const log = `${value} @ ${timestamp}`;
+      const textarea = document.getElementById("history");
+      textarea.value += log + "\n";
+      textarea.scrollTop = textarea.scrollHeight;
+    }
+
+    function logStart() {
+      const timestamp = getTimestamp();
+      const textarea = document.getElementById("history");
+      textarea.value += `Start: ${timestamp}\n`;
+      textarea.scrollTop = textarea.scrollHeight;
+    }
+
+    function getTimestamp() {
+      const now = new Date();
+      return now.getFullYear() + '-' +
+             String(now.getMonth()+1).padStart(2, '0') + '-' +
+             String(now.getDate()).padStart(2, '0') + ' ' +
+             String(now.getHours()).padStart(2, '0') + ':' +
+             String(now.getMinutes()).padStart(2, '0') + ':' +
+             String(now.getSeconds()).padStart(2, '0');
+    }
+  </script>
+</body>
+</html>
